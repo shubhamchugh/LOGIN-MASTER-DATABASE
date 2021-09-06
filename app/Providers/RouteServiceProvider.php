@@ -52,7 +52,7 @@ class RouteServiceProvider extends ServiceProvider
 
         //post route bind with slug
         Route::bind('post', function ($slug) {
-            return Post::published()->where('slug', $slug)->first();
+            return Post::where('post_ref', config('app.REKEY'))->published()->where('slug', $slug)->first();
         });
 
         //page route bind with slug
