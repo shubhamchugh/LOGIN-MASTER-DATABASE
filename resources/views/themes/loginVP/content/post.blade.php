@@ -68,7 +68,7 @@
                                 <a href="{{ $content->content_url }}" rel="nofollow" target="_blank"
                                     style="word-wrap:break-word;">
                                     <img class="img-zoom file-img img-fluid"
-                                        src="https://s3.us-west-1.wasabisys.com/loginproject/{{ $content->content_image }}"
+                                        src="https://s3.us-west-1.wasabisys.com/{{ config('app.WASABI_BUCKET_NAME') }}/{{ $content->content_image }}"
                                         style="width:100%;" alt="{{ $content->content_title }}"
                                         title="{{ $content->content_title }}">
                                 </a>
