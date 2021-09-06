@@ -14,10 +14,7 @@ class SidebarView
 
     public function composeSidebar(View $View)
     {
-        $post         = Post::get();
-        $postFirst_id = Post::orderBy('id')->pluck('id')->first();
-        $postCount    = $post->count();
-        $sidebar      = Post::published()->where('post_ref', config('app.REKEY'))->wherein('id', (getRandomNumberArray($postFirst_id, $postCount, config('app.SIDEBAR_POST_COUNT'))))->get();
+        $sidebar = Post::published()->where('post_ref', config('app.REKEY'))->wherein('id', (getRandomNumberArray(config('app.RANDOM_POST_START_COUNT'), config('app.RANDOM_POST_END_COUNT'), config('app.SIDEBAR_POST_COUNT'))))->get();
 
         $View->with([
             'sidebar' => $sidebar,
