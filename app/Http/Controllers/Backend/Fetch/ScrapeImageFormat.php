@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Backend\Fetch;
 
 use App\Models\Post;
+use App\Models\FakeUser;
 use App\Models\SourceUrl;
 use App\Models\PostContent;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\ScrapingFailed;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
@@ -13,8 +15,20 @@ use Illuminate\Support\Facades\Storage;
 
 class ScrapeImageFormat extends Controller
 {
-    public function ScrapeImageFormat($start = null, $end = null, $limit = null)
+    public function ScrapeImageFormat(Request $request)
     {
+        $start  = (!empty($request->start)) ? $request->start : 0;
+        $end    = (!empty($request->end)) ? $request->end : 999999999999999999;
+        $refKey = (!empty($request->refKey)) ? $request->refKey : null;
+
+        if (empty($refKey)) {
+            dd("Please Enter '?&refKey=HereValue'");
+        }
+        $totalFakeUser = FakeUser::get()->count();
+        if (empty($totalFakeUser)) {
+            dd("Please Get Some Fake Users before Scrape Post Please  Help: 'example.com/insert?userCount=Value'");
+        }
+
         $source_url = SourceUrl::where('is_scraped', 0)->whereBetween('id', [$start, $end])->orderBy('id', 'ASC')->first();
 
         if (!empty($source_url->url)) {
@@ -99,14 +113,14 @@ class ScrapeImageFormat extends Controller
                 $startdate = strtotime("2021-3-01 00:00:00");
                 $enddate   = strtotime("2021-5-31 23:59:59");
 
-                $randomDate = date("Y-m-d H:i:s", rand($startdate, $enddate));
+                $randomDate = date("Y-m-d H:i:s", mt_rand($startdate, $enddate));
 
                 $postStore = Post::create([
                     'is_content'   => '1',
                     'post_title'   => $post_name,
                     'source_url'   => $source_url->url,
-                    //'fake_user_id' => rand(1,175,424),
-                    'fake_user_id' => rand(1, 175424),
+                    'post_ref'     => $refKey,
+                    'fake_user_id' => mt_rand(1, $totalFakeUser),
                     'published_at' => $randomDate,
                 ]);
 
@@ -114,7 +128,7 @@ class ScrapeImageFormat extends Controller
 
                     PostContent::create([
                         'post_id'       => $postStore->id,
-                        'fake_user_id'  => rand(1, 175424),
+                        'fake_user_id'  => mt_rand(1, $totalFakeUser),
                         //'fake_user_id'=> '1',
                         'content_title' => $result_title2[$i],
                         'content_url'   => $result_url[$i],
@@ -129,8 +143,6 @@ class ScrapeImageFormat extends Controller
                     'source_url' => $source_url->url,
                     'error'      => 'Duplicate Removed From DataBase Id:' . $source_url->id,
                 ]);
-                SourceUrl::findorfail($source_url->id)->delete();
-                die("duplicate record deleted from database");
             }
 
             die("scraped success");

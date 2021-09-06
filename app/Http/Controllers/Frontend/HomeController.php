@@ -9,13 +9,15 @@ use App\Http\Controllers\Controller;
 class HomeController extends Controller
 {
 
-    protected $limit = 100;
-
     public function homeList()
     {
-        $posts = Post::inRandomOrder()
+        $post         = Post::get();
+        $postFirst_id = Post::orderBy('id')->pluck('id')->first();
+        $postCount    = $post->count();
+
+        $posts = Post::where('post_ref', config('app.REKEY'))->wherein('id', (getRandomNumberArray($postFirst_id, $postCount, config('app.HOMEPAGE_POST_COUNT'))))
             ->published()
-            ->paginate($this->limit);
+            ->paginate(config('app.HOMEPAGE_POST_COUNT'));
         return view('themes.loginVP.content.home', [
             'posts' => $posts,
         ]);

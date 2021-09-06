@@ -14,10 +14,13 @@ class SidebarView
 
     public function composeSidebar(View $View)
     {
-        $sidebar = Post::inRandomOrder()->limit(20)->get();
+        $post         = Post::get();
+        $postFirst_id = Post::orderBy('id')->pluck('id')->first();
+        $postCount    = $post->count();
+        $sidebar      = Post::published()->where('post_ref', config('app.REKEY'))->wherein('id', (getRandomNumberArray($postFirst_id, $postCount, config('app.SIDEBAR_POST_COUNT'))))->get();
 
         $View->with([
-           'sidebar' => $sidebar,
-       ]);
+            'sidebar' => $sidebar,
+        ]);
     }
 }
