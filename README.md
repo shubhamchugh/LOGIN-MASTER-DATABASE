@@ -4,34 +4,10 @@ Provider setup
 Menuserviceprovider.php
 then register in config app.php
 
-**Scrape From Base64 image encoding site**
-
-```sh
-http://domain.com/scrape/base64/start/1/end/10/limit/1
-```
-
-**Scrape from Jpg/Png file format website**
-
-```sh
-http://domain.com/scrape/imageformat/start/1/end/10/limit/1
-```
-
-**Scrape Only Title And All Urls**
-
-```sh
-http://domain.com/scrape/onlyurltitle/start/1/end/2000/limit/1
-```
-
-**Scrape Title Dec and Image(Upload at loginproject wasabi) from API and Update 'is_image' to '1' in post_contents table**
-
-```sh
-http://domain.com/scrape/TitleImgDec/start/1/end/200/
-```
-
 **Scrape data from API Login Project to Master**
 
 ```sh
-http://domain.com/hit?start=3&end=100
+http://domainname.com/hit?start=12&end=100&site=http://loginprojectdomain.com&refkey=test-domain
 ```
 
 **Reset Count for Next Scraping**
@@ -40,7 +16,7 @@ http://domain.com/hit?start=3&end=100
 https://domain.com/reset?count=1000
 ```
 
-**Reset Count for Next Scraping**
+**insert Fake UserNames**
 
 ```sh
 https://domain.com/insert?userCount=20

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\FakeUser;
 use App\Models\CountCheck;
 use App\Models\PostContent;
 use Illuminate\Http\Request;
@@ -14,11 +15,13 @@ class ApiDataScrapeController extends Controller
     {
         $start   = $request->start;
         $end     = $request->end;
-        $postRef = $request->ref;
+        $postRef = $request->refkey;
         $site    = $request->site;
 
         $count = CountCheck::where('is_scraped', '0')->whereBetween('id', [$start, $end])->orderBy('id', 'ASC')->first();
         $site  = $site . '/api/' . $count->id;
+
+        $totalUsers = FakeUser::count();
 
         $response = Http::get($site);
         $response = $response->json();
@@ -28,10 +31,10 @@ class ApiDataScrapeController extends Controller
             $sourceUrl = $response['source_url'];
 
             $postCreate = Post::Create([
-                'post_title' => $title,
-                'source_url' => $sourceUrl,
-                'post_ref'   => $postRef,
-                // 'fake_user_id' => rand(1, 175424),
+                'post_title'   => $title,
+                'source_url'   => $sourceUrl,
+                'post_ref'     => $postRef,
+                'fake_user_id' => rand(1, $totalUsers),
 
             ]);
 
