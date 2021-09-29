@@ -34,7 +34,7 @@ class ApiDataScrapeController extends Controller
                 'post_title'   => $title,
                 'source_url'   => $sourceUrl,
                 'post_ref'     => $postRef,
-                'fake_user_id' => rand(1, $totalUsers),
+                'fake_user_id' => mt_rand(1, $totalUsers),
 
             ]);
 
@@ -50,7 +50,14 @@ class ApiDataScrapeController extends Controller
                     'content_url'   => $contentUrl,
                     'content_dec'   => $contentDec,
                     'content_image' => $contentImage,
+                    'fake_user_id'  => mt_rand(1, $totalUsers),
                 ]);
+
+                $count->update(
+                    [
+                        'is_scraped' => '1',
+                    ]
+                );
 
             }
 
