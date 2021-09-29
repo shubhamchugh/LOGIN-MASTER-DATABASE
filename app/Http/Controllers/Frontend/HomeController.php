@@ -11,8 +11,7 @@ class HomeController extends Controller
 
     public function homeList()
     {
-        $totalPost = Post::count();
-        $posts     = Post::where('post_ref', config('app.REKEY'))->wherein('id', (getRandomNumberArray(config('app.RANDOM_POST_START_COUNT'), $totalPost, $totalPost)))
+        $posts = Post::where('post_ref', config('app.REKEY'))->wherein('id', (getRandomNumberArray(config('app.RANDOM_POST_START_COUNT'), config('app.RANDOM_POST_END_COUNT'), config('app.HOMEPAGE_POST_COUNT'))))
             ->published()
             ->paginate(config('app.HOMEPAGE_POST_PAGINATION'));
         return view('themes.loginVP.content.home', [
