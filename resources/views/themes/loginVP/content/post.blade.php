@@ -145,7 +145,7 @@
             @endforeach
         </div>
 
-        @include('themes.craigs.panels.sidebar')
+        @include('themes.loginVP.panels.sidebar')
         @endsection
 
 

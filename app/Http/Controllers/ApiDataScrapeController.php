@@ -19,50 +19,55 @@ class ApiDataScrapeController extends Controller
         $site    = $request->site;
 
         $count = CountCheck::where('is_scraped', '0')->whereBetween('id', [$start, $end])->orderBy('id', 'ASC')->first();
-        $site  = $site . '/api/' . $count->id;
 
-        $totalUsers = FakeUser::count();
+        if (!empty($count->id)) {
 
-        $response = Http::get($site);
-        $response = $response->json();
+            $site = $site . '/api/' . $count->id;
 
-        if ($response['status']) {
-            $title     = $response['title'];
-            $sourceUrl = $response['source_url'];
+            $totalUsers = FakeUser::count();
 
-            $postCreate = Post::Create([
-                'post_title'   => $title,
-                'source_url'   => $sourceUrl,
-                'post_ref'     => $postRef,
-                'fake_user_id' => mt_rand(1, $totalUsers),
+            $response = Http::get($site);
+            $response = $response->json();
 
-            ]);
+            if ($response['status']) {
+                $title     = $response['title'];
+                $sourceUrl = $response['source_url'];
 
-            foreach ($response['postContent'] as $key => $value) {
-                $contentTitle = $value['content_title'];
-                $contentUrl   = $value['content_url'];
-                $contentDec   = $value['content_dec'];
-                $contentImage = $value['content_image'];
+                $postCreate = Post::Create([
+                    'post_title'   => $title,
+                    'source_url'   => $sourceUrl,
+                    'post_ref'     => $postRef,
+                    'fake_user_id' => mt_rand(1, $totalUsers),
 
-                $postContent = PostContent::create([
-                    'post_id'       => $postCreate->id,
-                    'content_title' => $contentTitle,
-                    'content_url'   => $contentUrl,
-                    'content_dec'   => $contentDec,
-                    'content_image' => $contentImage,
-                    'fake_user_id'  => mt_rand(1, $totalUsers),
                 ]);
 
-                $count->update(
-                    [
-                        'is_scraped' => '1',
-                    ]
-                );
+                foreach ($response['postContent'] as $key => $value) {
+                    $contentTitle = $value['content_title'];
+                    $contentUrl   = $value['content_url'];
+                    $contentDec   = $value['content_dec'];
+                    $contentImage = $value['content_image'];
 
+                    $postContent = PostContent::create([
+                        'post_id'       => $postCreate->id,
+                        'content_title' => $contentTitle,
+                        'content_url'   => $contentUrl,
+                        'content_dec'   => $contentDec,
+                        'content_image' => $contentImage,
+                        'fake_user_id'  => mt_rand(1, $totalUsers),
+                    ]);
+
+                    $count->update(
+                        [
+                            'is_scraped' => '1',
+                        ]
+                    );
+                }
+            } else {
+                dd("status is false Something Bad With API DATA");
             }
 
         } else {
-            dd("No record found");
+            dd("Already Scraped Data please Stop Scraping");
         }
 
     }
