@@ -4,6 +4,11 @@ Provider setup
 Menuserviceprovider.php
 then register in config app.php
 
+**BackUp MasterDatabse**
+mysqldump -u  MASTER_LOGIN_USERNAME -p MASTER_LOGIN_DATABASE > MasterDatabase.sql
+Pass: ******
+
+
 **Scrape data from API Login Project to Master**
 
 ```sh
