@@ -4,6 +4,12 @@ Provider setup
 Menuserviceprovider.php
 then register in config app.php
 
+**Select Unique Key In Database**
+```sh
+SELECT DISTINCT post_ref FROM posts;
+```
+
+
 **BackUp MasterDatabse**
 
 ```sh
